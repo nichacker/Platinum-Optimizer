@@ -1,0 +1,695 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platinum Benchmark - High Performance</title>
+    <link rel="icon" href="./image/platinum-mode-rounded.png">
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        platinum: {
+                            900: '#1a0505',
+                            950: '#0f0202',
+                            800: '#2d0b0b',
+                            50: '#fff5f5',
+                        },
+                        electric: {
+                            500: '#dc2626',
+                            400: '#ef4444',
+                            600: '#991b1b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-platinum-950 text-white antialiased font-sans overflow-x-hidden">
+
+
+
+    <!-- Background Effect -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.2)_0%,rgba(15,2,2,0.9)_100%)]">
+        </div>
+        <!-- Dynamic Orange Light Orbs -->
+        <div class="platinum-light-orb" style="top: -10%; left: -10%; animation-delay: 0s;"></div>
+        <div class="platinum-light-orb" style="top: 50%; right: -15%; animation-delay: -4s;"></div>
+        <div class="platinum-light-orb" style="bottom: -20%; left: 30%; animation-delay: -8s;"></div>
+        <!-- Extra Red Lights -->
+        <div class="platinum-light-orb"
+            style="top: -15%; right: 10%; background: radial-gradient(circle, rgba(255, 0, 0, 0.5) 0%, rgba(220, 20, 60, 0.3) 40%, transparent 70%); animation-delay: -2s;">
+        </div>
+        <div class="platinum-light-orb"
+            style="bottom: 10%; right: -10%; background: radial-gradient(circle, rgba(220, 0, 0, 0.5) 0%, rgba(200, 0, 0, 0.3) 40%, transparent 70%); animation-delay: -6s;">
+        </div>
+
+        <div class="absolute inset-0 opacity-10"
+            style="background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+    </div>
+
+    <nav id="navbar" class="fixed top-6 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div
+                class="red-glass liquid-glass platinum-navbar rounded-full px-8 py-4 flex items-center justify-between shadow-2xl transition-all duration-300">
+                <div class="flex items-center gap-4 shrink-0">
+                    <img src="./image/platinum-mode.jpg" alt="Logo" class="h-10 w-10 blend-screen rounded-2xl"
+                        draggable="false" oncontextmenu="return false" />
+                    <span class="text-xl md:text-2xl font-bold tracking-tight uppercase font-serif"
+                        data-i18n="platinum.title">Platinum Benchmark</span>
+                </div>
+
+                <div id="nav-menu-container" class="flex items-center gap-6 relative z-10">
+                    <!-- Nav Blob for effect -->
+                    <div id="nav-blob"
+                        class="absolute pointer-events-none opacity-0 scale-75 transition-all duration-500 z-0"></div>
+                    <!-- Red Language Selector -->
+                    <div class="relative group hidden md:block">
+                        <button
+                            class="flex items-center space-x-2 text-white/70 hover:text-white transition-colors py-2 px-4 rounded-full hover:bg-red-500/10"
+                            id="lang-btn">
+                            <span class="text-lg" id="current-lang-flag">🇬🇧</span>
+                            <span class="uppercase tracking-wide text-xs font-bold" id="current-lang-code">EN</span>
+                            <i data-lucide="chevron-down"
+                                class="w-3 h-3 group-hover:rotate-180 transition-transform"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                            <div
+                                class="red-glass rounded-2xl shadow-xl overflow-hidden py-2 w-36 flex flex-col border border-red-500/20">
+                                <button onclick="setLanguage('it')"
+                                    class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-red-500/20 hover:text-white transition-colors text-left w-full">
+                                    <span>🇮🇹</span><span>Italiano</span>
+                                </button>
+                                <button onclick="setLanguage('en')"
+                                    class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-red-500/20 hover:text-white transition-colors text-left w-full">
+                                    <span>🇬🇧</span><span>English</span>
+                                </button>
+                                <button onclick="setLanguage('zh')"
+                                    class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-red-500/20 hover:text-white transition-colors text-left w-full">
+                                    <span>🇨🇳</span><span>简体中文</span>
+                                </button>
+                                <button onclick="setLanguage('ru')"
+                                    class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-red-500/20 hover:text-white transition-colors text-left w-full">
+                                    <span>🇷🇺</span><span>Русский</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-6 w-[1px] bg-white/10 mx-2 hidden md:block"></div>
+
+                    <button onclick="goBack()"
+                        class="px-6 py-2 rounded-full border border-red-500/20 hover:border-red-500/50 hover:bg-red-500/10 transition-all flex items-center gap-2 group">
+                        <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                        <span data-i18n="platinum.back">Torna Indietro</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pt-44 pb-24 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16 reveal-on-scroll">
+                <div class="mb-8 flex justify-center">
+                    <img src="./image/platinum-mode.jpg" alt="Platinum Logo"
+                        class="w-32 h-32 relative z-10 drop-shadow-[0_0_25px_rgba(220,38,38,0.4)] rounded-[2rem] blend-screen animate-glow-red"
+                        draggable="false" oncontextmenu="return false">
+                </div>
+                <h1 data-i18n="platinum.pageTitle"
+                    class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-red-500 to-white bg-clip-text text-transparent uppercase tracking-wider">
+                    Modalità Platinum Benchmark
+                </h1>
+                <p data-i18n="platinum.pageSubtitle" class="text-xl text-platinum-300 font-light max-w-2xl mx-auto">
+                    Questa è una modalità creata per misurare le Prestazioni e Stabilità del tuo dispositivo in tempo
+                    reale
+                </p>
+            </div>
+
+
+
+            <!-- Flame Section Decoration -->
+            <div class="relative py-20 overflow-hidden rounded-[3rem] border border-red-500/20 shadow-2xl">
+                <div class="absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent"></div>
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <h2 data-i18n="platinum.testHeadline" class="text-4xl font-bold mb-4">Pronto per il Test?</h2>
+                    <p data-i18n="platinum.testSubtext" class="text-platinum-300 mb-8 max-w-lg">
+                        Avvia il motore di ottimizzazione Platinum Benchmark e porta il tuo PC oltre ogni limite.
+                    </p>
+                    <button id="start-benchmark" data-i18n="platinum.startButton"
+                        class="px-12 py-4 bg-red-600 hover:bg-red-500 text-white rounded-full font-bold shadow-[0_0_30px_rgba(220,38,38,0.5)] transition-all transform hover:scale-105 active:scale-95">
+                        AVVIA BENCHMARK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Benchmark Popup Modal -->
+    <div id="benchmark-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-2xl" id="benchmark-overlay"></div>
+        <div
+            class="relative w-full max-w-6xl aspect-video bg-platinum-950/50 rounded-3xl border border-red-500/30 shadow-[0_0_100px_rgba(220,38,38,0.2)] overflow-hidden flex flex-col liquid-glass-modal will-change-transform">
+            <!-- FPS Counter -->
+            <div class="absolute top-8 right-12 z-50 flex flex-col items-end">
+                <div
+                    class="bg-black/40 backdrop-blur-md px-6 py-3 rounded-2xl border border-red-500/30 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
+                    <div
+                        class="text-6xl font-mono font-black text-white/80 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] leading-none text-right">
+                        <span id="fps-val">0</span>
+                    </div>
+                    <div class="flex flex-col items-end mt-1">
+                        <span data-i18n="platinum.fpsLabel"
+                            class="text-xs font-bold text-red-400 uppercase tracking-tighter">Frames Per
+                            Second</span>
+                        <div class="w-full h-1 bg-red-500/20 rounded-full mt-1 overflow-hidden">
+                            <div class="h-full bg-red-500 animate-pulse w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <button id="close-benchmark"
+                class="absolute top-8 left-8 z-50 p-3 bg-white/5 hover:bg-red-500/20 rounded-full border border-white/10 transition-all text-white">
+                <i data-lucide="x"></i>
+            </button>
+
+            <!-- 3D Canvas Container -->
+            <div id="benchmark-canvas-container" class="absolute inset-0 z-10 w-full h-full"></div>
+
+            <!-- Loader Overlay -->
+            <div id="benchmark-loader"
+                class="absolute inset-0 z-40 bg-platinum-950 flex flex-col items-center justify-center gap-6">
+                <div class="w-24 h-24 border-4 border-red-500/20 border-t-red-600 rounded-full animate-spin">
+                </div>
+                <div data-i18n="platinum.loaderText"
+                    class="text-white font-serif uppercase tracking-[0.5em] animate-pulse">Compiling Shaders...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Space -->
+    <div class="h-20"></div>
+
+    <!-- External Script JS -->
+    <script src="script.js"></script>
+
+    <script>
+        // ============ GPU BENCHMARK ENGINE ============
+        class BenchmarkEngine {
+            constructor() {
+                this.container = document.getElementById('benchmark-canvas-container');
+                this.fpsEl = document.getElementById('fps-val');
+                // Select grandparent to get the actual card container with background/border
+                this.fpsContainer = this.fpsEl ? this.fpsEl.parentElement.parentElement : null;
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: "high-performance",
+                    precision: "highp",
+                    stencil: false
+                });
+
+                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                // EXTREME: FORCE TRUE 4K RESOLUTION (3840px width)
+                // This calculates exactly how many pixels to render to reach 4K regardless of screen size
+                const target4KWidth = 3840;
+                const scaleFactor = target4KWidth / this.container.clientWidth;
+                this.renderer.setPixelRatio(scaleFactor);
+                this.container.appendChild(this.renderer.domElement);
+
+                this.camera.position.z = 5;
+                this.isRunning = false;
+                this.lastTime = performance.now();
+                this.frameCount = 0;
+
+                this.initMandelbulbGeometry();
+                this.initLights();
+                this.initMandelbrotBackground();
+                this.initBackgroundEffects();
+            }
+
+            initMandelbulbGeometry() {
+                // MANDELBULB RAYMARCHER - BIGGER & ROTATING
+
+                const vertexShader = `
+                    varying vec3 vWorldPos;
+                    void main() {
+                        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                        vWorldPos = worldPosition.xyz;
+                        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+                    }
+                `;
+
+                const fragmentShader = `
+                    varying vec3 vWorldPos;
+                    uniform vec3 cameraPos;
+                    uniform float time;
+                    uniform vec3 baseColor;
+
+                    // Rotation Matrix Helper
+                    mat3 rotateY(float angle) {
+                        float c = cos(angle);
+                        float s = sin(angle);
+                        return mat3(c, 0, s, 0, 1, 0, -s, 0, c);
+                    }
+                    
+                    mat3 rotateX(float angle) {
+                        float c = cos(angle);
+                        float s = sin(angle);
+                        return mat3(1, 0, 0, 0, c, -s, 0, s, c);
+                    }
+
+                    // Mandelbulb Distance Estimator
+                    float DE(vec3 pos) {
+                        // 1. ROTATION (Rotate the domain)
+                        pos = rotateY(time * 0.3) * rotateX(time * 0.2) * pos;
+
+                        // 2. SCALING (Make it BIGGER)
+                        // Dividing position by scale factor makes the object appear larger
+                        float scale = 2.5; 
+                        vec3 z = pos / scale;
+                        
+                        float dr = 1.0;
+                        float r = 0.0;
+                        float power = 8.0 + sin(time * 0.5) * 1.5; // Animating Power
+
+                        // INCREASED DETAIL: 20 Iterations (was 10)
+                        for (int i = 0; i < 20; i++) {
+                            r = length(z);
+                            if (r > 2.0) break;
+                            
+                            // To Polar
+                            float theta = acos(z.z/r);
+                            float phi = atan(z.y,z.x);
+                            
+                            dr =  pow( r, power-1.0)*power*dr + 1.0;
+                            
+                            // Scale & Rotate
+                            float zr = pow( r, power);
+                            theta = theta*power;
+                            phi = phi*power;
+                            
+                            // Back to Cartesian
+                            z = zr*vec3(sin(theta)*cos(phi), sin(phi)*sin(theta), cos(theta));
+                            
+                            z += pos / scale; // Add original pos (scaled)
+                        }
+                        // Correct distance for scaling
+                        return (0.5*log(r)*r/dr) * scale;
+                    }
+
+                    // Normal calculation
+                    vec3 getNormal(vec3 p) {
+                        float d = DE(p);
+                        vec2 e = vec2(.0001, 0); // Finer normal offset
+                        return normalize(vec3(
+                            d - DE(p - e.xyy),
+                            d - DE(p - e.yxy),
+                            d - DE(p - e.yyx)
+                        ));
+                    }
+
+                    void main() {
+                        vec3 ro = cameraPos;
+                        vec3 rd = normalize(vWorldPos - ro);
+                        
+                        float t = 0.0;
+                        float d = 0.0;
+                        int steps = 0;
+                        bool hit = false;
+                        
+                        // HIGH PRECISION LOOP: 320 Steps (was 80) - 400% Increase
+                        for(int i=0; i<320; i++) {
+                            vec3 p = ro + rd * t;
+                            d = DE(p);
+                            if(d < 0.0002) { // Ultra-fine threshold (was 0.001)
+                                hit = true;
+                                break;
+                            }
+                            if(t > 15.0) break; // Increased visual distance
+                            t += d;
+                            steps = i;
+                        }
+
+                        if(hit) {
+                            vec3 p = ro + rd * t;
+                            vec3 n = getNormal(p);
+                            
+                            // Lighting
+                            vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
+                            float diff = max(dot(n, lightDir), 0.0);
+                            float amb = 0.2;
+                            
+                            // Coloring
+                            vec3 col = baseColor * (diff + amb);
+                            col += vec3(1.0, 0.5, 0.2) * (float(steps)/320.0) * 4.0; // Adjusted glow for new steps
+                            
+                            gl_FragColor = vec4(col, 1.0);
+                        } else {
+                            discard;
+                        }
+                    }
+                `;
+
+                // Increased Box Size to fit the larger fractal
+                const geometry = new THREE.BoxGeometry(10, 10, 10);
+                this.mandelbulbMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        cameraPos: { value: this.camera.position },
+                        baseColor: { value: new THREE.Color(0xdc2626) }
+                    },
+                    vertexShader: vertexShader,
+                    fragmentShader: fragmentShader,
+                    side: THREE.BackSide,
+                    transparent: true
+                });
+
+                this.mandelbulbMesh = new THREE.Mesh(geometry, this.mandelbulbMaterial);
+                this.scene.add(this.mandelbulbMesh);
+
+                // Clear old references
+                this.benchmarkMeshes = null;
+                this.masterRing1 = null;
+                this.masterRing2 = null;
+            }
+
+            initMandelbrotBackground() {
+                // EXTREME GPU LOAD: Mandelbrot Fractal Shader
+                const vertexShader = `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `;
+
+                const fragmentShader = `
+                    varying vec2 vUv;
+                    uniform float time;
+                    uniform vec2 resolution;
+
+                    void main() {
+                        vec2 p = (vUv - 0.5) * 2.0;
+                        // Zoom animation - ULTRA DEEP & INFINITE
+                        // Ranges from standard view to microscopic
+                        float zoomPhase = 0.5 + 0.5 * sin(time * 0.4); 
+                        float scale = pow(0.00001, zoomPhase); // Extremely deep zoom (10^-5)
+                        
+                        // Precise center for deep zoom (Seahorse Valley location)
+                        vec2 center = vec2(-0.74364388703, 0.13182590421); 
+                        vec2 c = center + p * scale * 2.0;
+                        
+                        vec2 z = vec2(0.0);
+                        float iter = 0.0;
+                        const float maxIter = 600.0; // Increased iterations for deep zoom detail
+
+                        for(float i = 0.0; i < maxIter; i++) {
+                            z = vec2(z.x*z.x - z.y*z.y, 2.0*z.x*z.y) + c;
+                            if(length(z) > 4.0) break;
+                            iter++;
+                        }
+
+                        // Coloring - Fiery Red/Orange to match theme
+                        vec3 col = vec3(0.0);
+                        if (iter < maxIter) {
+                            float smoothIter = iter - log2(log2(dot(z,z))) + 4.0;
+                            // Faster color cycling
+                            col = 0.5 + 0.5 * cos(3.0 + smoothIter * 0.2 + time * 0.5 + vec3(0.0, 0.6, 1.0));
+                            col *= vec3(2.0, 0.8, 0.2); // Extremely Bright Red/Gold
+                        } else {
+                            col = vec3(0.1, 0.0, 0.0); // Dark red background for inside set
+                        }
+
+                        gl_FragColor = vec4(col, 0.85); // High Opacity for visibility
+                    }
+                `;
+
+                const geometry = new THREE.PlaneGeometry(100, 100);
+                this.mandelbrotMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        resolution: { value: new THREE.Vector2(this.container.clientWidth, this.container.clientHeight) }
+                    },
+                    vertexShader: vertexShader,
+                    fragmentShader: fragmentShader,
+                    transparent: true,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const plane = new THREE.Mesh(geometry, this.mandelbrotMaterial);
+                plane.position.z = -10; // Behind shapes
+                this.scene.add(plane);
+            }
+
+            initBackgroundEffects() {
+                this.bgPoints = []; // Kept empty or remove entirely, but safer to keep variable def
+                const bgGroup = new THREE.Group();
+
+                // 1. Colore di sfondo "profondo" (non nero assoluto)
+                this.scene.background = new THREE.Color(0x080000);
+
+                // 2. Nebbia Volumetrica (Fog) per dare profondità e colore
+                this.scene.fog = new THREE.FogExp2(0x1a0000, 0.035);
+
+                // 3. Sistema di particelle "Polvere di Fuoco" (2000 particelle)
+                const partGeo = new THREE.BufferGeometry();
+                const partPos = [];
+                for (let i = 0; i < 2000; i++) {
+                    partPos.push((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60);
+                }
+                partGeo.setAttribute('position', new THREE.Float32BufferAttribute(partPos, 3));
+                const partMat = new THREE.PointsMaterial({
+                    color: 0xff4400,
+                    size: 0.1,
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+                const particles = new THREE.Points(partGeo, partMat);
+                this.scene.add(particles);
+                this.bgParticles = particles;
+
+                // 4. (REMOVED) Wandering Spheres removed as requested
+
+                this.scene.add(bgGroup);
+                this.backgroundGroup = bgGroup;
+            }
+
+            initLights() {
+                // Atmosfera calda: Arancio/Rosso dominante
+                const lights = [
+                    [15, 15, 15, 0xffaa00, 6],    // Top Right Orange
+                    [-15, 15, 15, 0xff4400, 5],   // Top Left Deep Orange
+                    [0, -15, 10, 0xdc2626, 8],    // Bottom Red Glow (Ultra Intense)
+                    [0, 0, 15, 0xff7700, 4]       // Frontal Warm Fill
+                ];
+
+                lights.forEach(l => {
+                    const pl = new THREE.PointLight(l[3], l[4]);
+                    pl.position.set(l[0], l[1], l[2]);
+                    this.scene.add(pl);
+                });
+
+                // Luce direzionale per ombre nette e riflessi di luce definiti
+                const dl = new THREE.DirectionalLight(0xffffff, 2);
+                dl.position.set(0, 10, 5);
+                this.scene.add(dl);
+
+                this.scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+            }
+
+            start() {
+                this.isRunning = true;
+                this.startTime = performance.now();
+                this.lastFrameTime = performance.now();
+                this.lastUIUpdate = 0;
+                this.currentFPS = 0;
+                this.animate();
+            }
+
+            stop() {
+                this.isRunning = false;
+                if (this.renderer) {
+                    this.renderer.dispose();
+                    this.container.innerHTML = '';
+                    this.renderer = null;
+                }
+            }
+
+            animate() {
+                if (!this.isRunning) return;
+
+                // 1. Precise Delta Time Measurement (True FPS)
+                const now = performance.now();
+                const delta = now - this.lastFrameTime;
+                this.lastFrameTime = now;
+
+                requestAnimationFrame(() => this.animate());
+
+                const elapsed = (now - this.startTime) * 0.001;
+
+                if (this.mandelbulbMesh) {
+                    this.mandelbulbMesh.rotation.y = elapsed * 0.05;
+                    if (this.mandelbulbMaterial) {
+                        this.mandelbulbMaterial.uniforms.time.value = elapsed;
+                        this.mandelbulbMaterial.uniforms.cameraPos.value.copy(this.camera.position);
+                    }
+                }
+
+                if (this.mandelbrotMaterial) {
+                    this.mandelbrotMaterial.uniforms.time.value = elapsed;
+                }
+
+                if (this.backgroundGroup) {
+                    // Just rotate background group slowly
+                    this.backgroundGroup.rotation.y += 0.0005;
+                    this.backgroundGroup.rotation.z += 0.0002;
+                }
+
+                if (this.bgParticles) {
+                    this.bgParticles.rotation.y -= 0.001;
+                    this.bgParticles.rotation.x += 0.0005;
+                }
+
+                if (this.cubeCamera) {
+                    if (this.mandelbulbMesh) this.mandelbulbMesh.visible = false;
+                    this.cubeCamera.update(this.renderer, this.scene);
+                    if (this.mandelbulbMesh) this.mandelbulbMesh.visible = true;
+                }
+
+                this.renderer.render(this.scene, this.camera);
+
+                // 2. Accurate FPS Calculation
+                // const fps = 1000 / delta; 
+                // Use a sliding window for stability without "faking"
+                const instantFPS = delta > 0 ? 1000 / delta : 0;
+
+                // Slight smoothing (90% history, 10% new) to make it readable but honest
+                this.currentFPS = (this.currentFPS * 0.9) + (instantFPS * 0.1);
+
+                if (now - this.lastUIUpdate >= 150) { // Update text every 150ms
+                    const roundedFPS = Math.round(this.currentFPS);
+                    this.fpsEl.innerText = roundedFPS;
+
+                    // Dynamic Fire/Ice Effect
+                    if (roundedFPS > 53) {
+                        this.fpsEl.classList.add('fps-fire');
+                        this.fpsEl.classList.remove('fps-ice');
+                        if (this.fpsContainer) {
+                            this.fpsContainer.classList.add('container-fire');
+                            this.fpsContainer.classList.remove('container-ice');
+                        }
+                    } else {
+                        this.fpsEl.classList.remove('fps-fire');
+                        this.fpsEl.classList.add('fps-ice');
+                        if (this.fpsContainer) {
+                            this.fpsContainer.classList.remove('container-fire');
+                            this.fpsContainer.classList.add('container-ice');
+                        }
+                    }
+
+                    this.lastUIUpdate = now;
+                }
+            }
+        }
+
+        function goBack() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            document.body.style.transition = 'all 0.6s cubic-bezier(0.7, 0, 0.3, 1)';
+            setTimeout(() => {
+                window.location.href = '新建 Text Document.html';
+            }, 600);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+
+            // Benchmark Logic
+            const modal = document.getElementById('benchmark-modal');
+            const modalContent = modal.querySelector('.liquid-glass-modal');
+            const startBtn = document.getElementById('start-benchmark');
+            const closeBtn = document.getElementById('close-benchmark');
+            const loader = document.getElementById('benchmark-loader');
+            let engine = null;
+
+            if (startBtn) {
+                startBtn.addEventListener('click', (e) => {
+                    const rect = startBtn.getBoundingClientRect();
+                    const startX = rect.left + rect.width / 2 - window.innerWidth / 2;
+                    const startY = rect.top + rect.height / 2 - window.innerHeight / 2;
+                    const startScale = rect.width / (window.innerWidth * 0.9);
+
+                    modalContent.style.setProperty('--start-x', `${startX}px`);
+                    modalContent.style.setProperty('--start-y', `${startY}px`);
+                    modalContent.style.setProperty('--start-scale', `${startScale.toFixed(4)}`);
+
+                    modal.classList.remove('hidden');
+                    modalContent.style.animation = 'liquid-drop-entry 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards';
+
+                    loader.style.display = 'flex';
+                    loader.style.opacity = '1';
+
+                    setTimeout(() => {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.style.display = 'none', 500);
+                        engine = new BenchmarkEngine();
+                        engine.start();
+                    }, 2000);
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modalContent.style.animation = 'liquid-drop-exit 0.5s cubic-bezier(0.4, 0, 1, 1) forwards';
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        if (engine) engine.stop();
+                        engine = null;
+                    }, 450);
+                });
+            }
+
+            // Inizializzazione sistemi esterni
+
+            if (typeof initScrollAnimations === 'function') initScrollAnimations();
+            if (typeof initLiquidScroll === 'function') initLiquidScroll();
+            if (typeof initBackgroundMusic === 'function') initBackgroundMusic();
+            if (typeof initNavBlob === 'function') initNavBlob();
+
+            const savedLang = localStorage.getItem('preferred_lang') || 'en';
+            if (typeof setLanguage === 'function') setLanguage(savedLang);
+        });
+    </script>
+</body>
+
+</html>

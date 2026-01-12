@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platinum+ Optimizer Android</title>
+    <link rel="icon" href="./image/favicon1.ico">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <!-- 2D Background Animation Logic (Moved from 3D) -->
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        platinum: { 900: '#0B1C2D', 950: '#050a0f' },
+                        aqua: {
+                            400: '#00ffd5',
+                            500: '#00e6c0',
+                            600: '#00ccaa',
+                            glow: 'rgba(0, 255, 213, 0.6)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'aqua-glow': '0 0 30px -5px rgba(0, 255, 213, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050a0f;
+            overflow-x: hidden;
+            opacity: 1;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        /* Android Page Specific Styles */
+        .text-aqua-glow {
+            text-shadow: 0 0 20px rgba(0, 255, 213, 0.4), 0 0 40px rgba(0, 255, 213, 0.2);
+        }
+
+        .aqua-glass {
+            background: rgba(0, 255, 213, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 255, 213, 0.05);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+        /* Android System Initialization Preloader */
+        @keyframes system-pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+                filter: drop-shadow(0 0 10px rgba(0, 255, 213, 0.3));
+            }
+
+            50% {
+                transform: scale(1.02);
+                opacity: 1;
+                filter: drop-shadow(0 0 30px rgba(0, 255, 213, 0.6));
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+                filter: drop-shadow(0 0 10px rgba(0, 255, 213, 0.3));
+            }
+        }
+
+        @keyframes text-flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 20px rgba(0, 255, 213, 0.8);
+            }
+
+            50% {
+                opacity: 0.7;
+                text-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
+            }
+
+            70% {
+                opacity: 0.9;
+                text-shadow: 0 0 25px rgba(0, 255, 213, 0.9);
+            }
+        }
+
+        /* Custom Aqua Scrollbar for Android Page */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050a0f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00ffd5, #008f75);
+            border-radius: 5px;
+            border: 2px solid #050a0f;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffd5;
+            box-shadow: 0 0 15px rgba(0, 255, 213, 0.5);
+        }
+
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #00ffd5 #050a0f;
+        }
+
+
+
+        @keyframes logo-float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                filter: drop-shadow(0 0 20px rgba(0, 255, 213, 0.3));
+            }
+
+            50% {
+                transform: translateY(-10px);
+                filter: drop-shadow(0 0 40px rgba(0, 255, 213, 0.5));
+            }
+        }
+
+        .animate-float-logo {
+            animation: logo-float 4s infinite ease-in-out;
+        }
+
+        /* Click Ripple (Aqua Edition) */
+        .click-ripple-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .ripple-ring {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border: 2px solid #00ffd5;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            box-shadow: 0 0 30px rgba(0, 255, 213, 0.5), inset 0 0 15px #00ffd5;
+            animation: ripple-spread 0.8s cubic-bezier(0.15, 0.8, 0.25, 1) forwards;
+            filter: drop-shadow(0 0 12px #00ffd5);
+        }
+
+        @keyframes ripple-spread {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+                border-width: 4px;
+            }
+
+            15% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(25);
+                opacity: 0;
+                border-width: 0.1px;
+            }
+        }
+
+        .ripple-spark {
+            position: absolute;
+            width: 2px;
+            height: 8px;
+            background: linear-gradient(to bottom, #00ffd5, #009980, transparent);
+            border-radius: 4px;
+            transform-origin: top center;
+            opacity: 0;
+        }
+
+        @keyframes spark-flight {
+            0% {
+                transform: rotate(var(--angle)) translateY(0) scaleY(1);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: rotate(var(--angle)) translateY(var(--dist)) scaleY(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes copy-bounce {
+            0% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(1.15) translateY(-2px);
+            }
+
+            50% {
+                transform: scale(0.9) translateY(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .animate-copy {
+            animation: copy-bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(0, 255, 213, 0.2) !important;
+            border-color: rgba(0, 255, 213, 0.6) !important;
+        }
+
+        /* --- AQUA THEME OVERRIDES --- */
+        /* Override Music Player Colors locally for this page */
+        .music-toggle {
+            --music-slash-color: #00ffd5 !important;
+            --music-wave-color: #00ffd5 !important;
+            background: rgba(0, 255, 213, 0.05) !important;
+            border-color: rgba(0, 255, 213, 0.1) !important;
+        }
+
+        .music-toggle:hover {
+            background: rgba(0, 255, 213, 0.15) !important;
+            border-color: rgba(0, 255, 213, 0.4) !important;
+            box-shadow: 0 0 15px rgba(0, 255, 213, 0.3) !important;
+        }
+
+        /* Navbar Blob Color Override */
+        #nav-blob {
+            background-color: rgba(0, 255, 213, 0.15) !important;
+        }
+    </style>
+</head>
+
+<body class="text-white antialiased selection:bg-aqua-400 selection:text-black">
+
+
+
+    <!-- 3D Background Container -->
+    <div id="canvas-container" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- Content Wrapper -->
+    <div class="relative z-10 min-h-screen flex flex-col">
+
+        <!-- Navigation Area (Index Style - Floating Glass) -->
+        <nav id="navbar" class="fixed top-6 left-0 right-0 z-50">
+            <div class="max-w-7xl mx-auto px-4">
+                <div
+                    class="aqua-glass liquid-glass rounded-full px-8 py-4 flex items-center justify-between shadow-2xl transition-all duration-300">
+
+                    <!-- Left: Logo/Title (Optional, can be back button if minimizing) -->
+                    <div class="flex items-center gap-4 shrink-0">
+                        <img src="./image/Platinum+ Optimizer Android Logo.png" alt="Logo"
+                            class="h-10 w-10 blend-screen rounded-2xl" draggable="false" oncontextmenu="return false" />
+                        <span
+                            class="text-xl md:text-2xl font-bold tracking-tight uppercase font-serif text-white/90">Platinum+
+                            Android</span>
+                    </div>
+
+                    <!-- Right: Actions Container -->
+                    <div id="nav-menu-container" class="flex items-center gap-6 relative z-10">
+                        <!-- Nav Blob for effect -->
+                        <div id="nav-blob"
+                            class="absolute pointer-events-none opacity-0 scale-75 transition-all duration-500 z-0">
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div class="relative group hidden md:block z-20">
+                            <button
+                                class="flex items-center space-x-2 text-white/70 hover:text-white transition-colors py-2 px-4 rounded-full hover:bg-aqua-400/10 android-btn-nav"
+                                id="lang-btn">
+                                <span class="text-lg" id="current-lang-flag">🇬🇧</span>
+                                <span class="uppercase tracking-wide text-xs font-bold" id="current-lang-code">EN</span>
+                                <i data-lucide="chevron-down"
+                                    class="w-3 h-3 group-hover:rotate-180 transition-transform"></i>
+                            </button>
+                            <div
+                                class="absolute right-0 top-full pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
+                                <div
+                                    class="aqua-glass rounded-2xl shadow-xl overflow-hidden py-2 w-36 flex flex-col border border-aqua-400/20 bg-[#050a0f]/95 text-left">
+                                    <button onclick="setLanguage('it')"
+                                        class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-aqua-400/20 hover:text-white transition-colors text-left w-full">
+                                        <span>🇮🇹</span><span>Italiano</span>
+                                    </button>
+                                    <button onclick="setLanguage('en')"
+                                        class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-aqua-400/20 hover:text-white transition-colors text-left w-full">
+                                        <span>🇬🇧</span><span>English</span>
+                                    </button>
+                                    <button onclick="setLanguage('ru')"
+                                        class="flex items-center space-x-3 px-4 py-3 text-sm text-white/70 hover:bg-aqua-400/20 hover:text-white transition-colors text-left w-full">
+                                        <span>🇷🇺</span><span>Русский</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="h-6 w-[1px] bg-white/10 mx-2 hidden md:block"></div>
+
+                        <!-- Back Button -->
+                        <button onclick="goBack()"
+                            class="px-6 py-2 rounded-full border border-aqua-400/20 hover:border-aqua-400/50 hover:bg-aqua-400/10 transition-all flex items-center gap-2 group android-btn-nav relative z-20 text-white/80 hover:text-white">
+                            <i data-lucide="arrow-left"
+                                class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                            <span data-i18n="android.backToHome">HOME</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex flex-col items-center justify-center text-center p-4 pt-40">
+
+            <div class="mb-6 relative flex justify-center">
+                <img src="./image/Platinum+ Optimizer Android Logo.png" alt="Platinum Logo"
+                    class="w-32 md:w-40 h-auto relative z-10 animate-float-logo rounded-[1.5rem]" draggable="false"
+                    oncontextmenu="return false">
+            </div>
+
+            <h1 class="font-serif font-bold mb-6 text-white text-aqua-glow tracking-tight leading-none">
+                <span
+                    class="text-5xl md:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-white to-white/80 block pb-2"
+                    data-i18n="android.titlePart1">Platinum+ Optimizer</span>
+                <span
+                    class="text-5xl md:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-aqua-400 to-emerald-400 font-bold block mt-[-5px]"
+                    data-i18n="android.titlePart2">ANDROID</span>
+            </h1>
+
+            <p class="text-white/60 text-lg md:text-xl max-w-2xl font-light leading-relaxed mb-12"
+                data-i18n="android.subtitle">
+                Unleash the true power of your mobile device. Kernel-level optimization now available for the Android
+                ecosystem.
+            </p>
+
+            <div class="aqua-glass p-8 rounded-3xl text-left w-full max-w-3xl">
+                <div class="flex items-center gap-4 mb-6">
+                    <div
+                        class="w-12 h-12 bg-aqua-400/10 rounded-xl flex items-center justify-center border border-aqua-400/20">
+                        <i data-lucide="terminal" class="text-aqua-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white" data-i18n="android.guideTitle">Installation Guide</h3>
+                </div>
+
+                <div class="space-y-6 text-white/70 font-light">
+                    <div class="flex gap-4 items-start">
+                        <span
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-aqua-400/10 text-aqua-400 flex items-center justify-center text-sm font-bold border border-aqua-400/20">1</span>
+                        <p data-i18n="android.step1">Vai in <span class="text-aqua-400 font-medium">impostazioni</span>,
+                            poi in <span class="text-aqua-400 font-medium">opzioni sviluppatore</span> e abilita <span
+                                class="text-aqua-400 font-medium">debug wireless</span>.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <span
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-aqua-400/10 text-aqua-400 flex items-center justify-center text-sm font-bold border border-aqua-400/20">2</span>
+                        <p data-i18n="android.step2">Installa <span class="text-aqua-400 font-medium">Shizuku</span> e
+                            <span class="text-aqua-400 font-medium">Termux</span> per Android (APK).
+                        </p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <span
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-aqua-400/10 text-aqua-400 flex items-center justify-center text-sm font-bold border border-aqua-400/20">3</span>
+                        <p data-i18n="android.step3">Sposta il file <code
+                                class="bg-white/5 px-2 py-0.5 rounded text-aqua-400 font-mono text-sm">boost.sh</code>
+                            dalla cartella Download alla memoria interna (<span
+                                class="text-aqua-400 font-medium">Storage Emulated</span>).</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <span
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-aqua-400/10 text-aqua-400 flex items-center justify-center text-sm font-bold border border-aqua-400/20">4</span>
+                        <p data-i18n="android.step4">Apri <span class="text-aqua-400 font-medium">Shizuku</span>, clicca
+                            su accoppia e una volta
+                            terminato clicca su <span class="text-aqua-400 font-medium">avvia Shizuku server</span>.
+                            Minimizza l'app senza chiuderla.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <span
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-aqua-400/10 text-aqua-400 flex items-center justify-center text-sm font-bold border border-aqua-400/20">5</span>
+                        <div>
+                            <p class="mb-4" data-i18n="android.step5">Apri <span
+                                    class="text-aqua-400 font-medium">Termux</span> e incolla il
+                                seguente codice:</p>
+                            <div class="relative group">
+                                <pre id="termux-code"
+                                    class="bg-black/40 p-4 rounded-xl border border-aqua-400/20 font-mono text-xs text-aqua-400 overflow-x-auto">cd ~
+cp /sdcard/shu/rish .
+cp /sdcard/shu/rish_shizuku.dex .
+chmod +x rish
+./rish
+cd /data/local/tmp
+cp /sdcard/boost.sh .
+sed -i 's/\r$//' boost.sh
+sh boost.sh</pre>
+                                <button onclick="copyCode(event)"
+                                    class="absolute top-2 right-2 px-3 py-1 bg-aqua-400/10 hover:bg-aqua-400/20 border border-aqua-400/30 rounded-lg text-[10px] text-aqua-400 font-bold uppercase tracking-wider transition-all flex items-center gap-2 overflow-hidden">
+                                    <i data-lucide="copy" class="w-3 h-3"></i>
+                                    Copy
+                                </button>
+                                <script>
+                                    function copyCode(event) {
+                                        const code = document.getElementById('termux-code').innerText;
+                                        navigator.clipboard.writeText(code).then(() => {
+                                            const btn = event.currentTarget || event.target.closest('button');
+                                            const originalText = btn.innerHTML;
+                                            btn.classList.add('animate-copy');
+                                            triggerRipple(event.clientX, event.clientY);
+                                            btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> Copied!';
+                                            if (window.lucide) lucide.createIcons();
+                                            setTimeout(() => {
+                                                btn.classList.remove('animate-copy');
+                                                btn.innerHTML = originalText;
+                                                if (window.lucide) lucide.createIcons();
+                                            }, 2000);
+                                        });
+                                    }
+
+                                    function triggerRipple(x, y) {
+                                        const container = document.createElement('div');
+                                        container.className = 'click-ripple-container';
+                                        container.style.left = x + 'px';
+                                        container.style.top = y + 'px';
+                                        document.body.appendChild(container);
+                                        const ring = document.createElement('div');
+                                        ring.className = 'ripple-ring';
+                                        container.appendChild(ring);
+                                        const sparkCount = 10;
+                                        for (let i = 0; i < sparkCount; i++) {
+                                            const spark = document.createElement('div');
+                                            spark.className = 'ripple-spark';
+                                            const angle = (i / sparkCount) * 360 + (Math.random() * 20 - 10);
+                                            const dist = 50 + Math.random() * 30;
+                                            spark.style.setProperty('--angle', angle + 'deg');
+                                            spark.style.setProperty('--dist', dist + 'px');
+                                            spark.style.animation = `spark-flight 0.7s cubic-bezier(0.15, 0.8, 0.25, 1) forwards`;
+                                            container.appendChild(spark);
+                                        }
+                                        setTimeout(() => container.remove(), 1200);
+                                    }
+
+                                    document.addEventListener('mousedown', (e) => {
+                                        triggerRipple(e.clientX, e.clientY);
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="https://ik.imagekit.io/xsc5vax29/boost.sh" download
+                class="mt-16 px-10 py-4 bg-aqua-400 text-black font-bold rounded-full shadow-[0_0_25px_rgba(0,255,213,0.4)] hover:shadow-[0_0_40px_rgba(0,255,213,0.6)] hover:bg-white transition-all transform hover:-translate-y-1 inline-block"
+                data-i18n="android.downloadBtn">
+                Download Platinum+ Android
+            </a>
+
+        </main>
+
+        <footer class="p-8 text-center text-white/20 text-xs" data-i18n="android.copyright">
+            &copy; 2026 Platinum+ Optimizer Android.
+        </footer>
+    </div>
+
+    <!-- Troubleshooting Info -->
+    <div
+        class="fixed bottom-6 right-6 max-w-[320px] p-4 bg-black/30 backdrop-blur-md rounded-2xl border border-aqua-400/2 text-xs text-white/40 leading-relaxed z-40 hover:bg-black/50 hover:text-white/70 transition-all duration-500">
+        <div class="flex gap-3 items-start">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-aqua-400/60 shrink-0"></i>
+            <p data-i18n="android.troubleshooting">Se termux dice errore o se non trova il file verificare che il file
+                .sh sia nella memoria interna in
+                (Storage Emulated) o incollare di nuovo tutto il codice in una volta sola e premere invio nella
+                tastiera. (Funzione android)</p>
+        </div>
+    </div>
+
+    <!-- Background Animation Script (2D Interactive Orbs) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            const container = document.getElementById('canvas-container');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            container.appendChild(canvas);
+
+            let width, height;
+            let orbs = [];
+            const mouse = { x: -1000, y: -1000 };
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Orb {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * 1.5; // Increased speed (was 0.5)
+                    this.vy = (Math.random() - 0.5) * 1.5; // Increased speed (was 0.5)
+                    this.radius = Math.random() * 180 + 120; // Slightly larger for better "light" coverage
+                    this.baseRadius = this.radius;
+                    this.phase = Math.random() * Math.PI * 2;
+                    this.pulseSpeed = 0.005 + Math.random() * 0.01;
+                    this.color = {
+                        r: 0,
+                        g: 255,
+                        b: 213
+                    };
+                }
+
+                update() {
+                    this.phase += this.pulseSpeed;
+
+                    // Natural Drift
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Random slight direction changes (Gentle wandering)
+                    this.vx += (Math.random() - 0.5) * 0.02;
+                    this.vy += (Math.random() - 0.5) * 0.02;
+
+                    // Mouse Interaction (Fluent Repulsion)
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = 350; // Larger interaction radius
+
+                    if (dist < minDist) {
+                        const force = (minDist - dist) / minDist;
+                        const angle = Math.atan2(dy, dx);
+                        this.vx += Math.cos(angle) * force * 0.4; // Stronger push
+                        this.vy += Math.sin(angle) * force * 0.4; // Stronger push
+                    }
+
+                    // Friction (Reduced to allow more continuous movement)
+                    this.vx *= 0.995;
+                    this.vy *= 0.995;
+
+                    // Boundaries (Soft Bounce)
+                    if (this.x < -this.radius) this.x = width + this.radius;
+                    if (this.x > width + this.radius) this.x = -this.radius;
+                    if (this.y < -this.radius) this.y = height + this.radius;
+                    if (this.y > height + this.radius) this.y = -this.radius;
+                }
+
+                draw() {
+                    const pulse = (Math.sin(this.phase) + 1) / 2; // 0 to 1
+                    const alpha = 0.1 + pulse * 0.2; // Slow flashing alpha
+                    this.radius = this.baseRadius * (0.9 + pulse * 0.2); // Subtle breathing
+
+                    const gradient = ctx.createRadialGradient(
+                        this.x, this.y, 0,
+                        this.x, this.y, this.radius
+                    );
+
+                    gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`);
+                    gradient.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Initialize Orbs
+            for (let i = 0; i < 18; i++) {
+                orbs.push(new Orb());
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                // Use screen blending for light mixing
+                ctx.globalCompositeOperation = 'screen';
+
+                orbs.forEach(orb => {
+                    orb.update();
+                    orb.draw();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // ============ LIQUID GLASS SCROLL (Goccia Animation) ============
+            function initLiquidScroll() {
+                const targets = document.querySelectorAll('.aqua-glass, .init-logo, h1, p, button, a, i, img, .rounded-full, .rounded-xl');
+
+                targets.forEach(el => {
+                    el.style.willChange = 'transform';
+                    el.style.backfaceVisibility = 'hidden';
+                });
+
+                let currentScroll = window.pageYOffset;
+                let scrollVelocity = 0;
+                let lerpVelocity = 0;
+
+                function updateScrollEffect() {
+                    const newScroll = window.pageYOffset;
+                    scrollVelocity = (newScroll - currentScroll);
+                    currentScroll = newScroll;
+
+                    lerpVelocity += (scrollVelocity - lerpVelocity) * 0.15;
+                    const absVel = Math.abs(lerpVelocity);
+
+                    const stretchY = 1 + Math.min(0.1, absVel * 0.0005);
+                    const compressX = 1 / stretchY;
+                    const skew = Math.max(-1.5, Math.min(1.5, lerpVelocity * 0.01));
+
+                    targets.forEach(el => {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            el.style.transform = `
+                                skewY(${skew.toFixed(2)}deg) 
+                                scaleX(${compressX.toFixed(3)}) 
+                                scaleY(${stretchY.toFixed(3)})
+                                translateY(${(lerpVelocity * -0.05).toFixed(2)}px)
+                            `;
+                        }
+                    });
+
+                    requestAnimationFrame(updateScrollEffect);
+                }
+                updateScrollEffect();
+            }
+
+            initLiquidScroll();
+
+            window.goBack = function () {
+                document.body.style.opacity = '0';
+                document.body.style.transform = 'translateY(20px)';
+                document.body.style.transition = 'all 0.6s cubic-bezier(0.7, 0, 0.3, 1)';
+                setTimeout(() => {
+                    window.location.href = '新建 Text Document.html';
+                }, 600);
+            };
+
+            // Slow Entrance Dissolve Fix
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 50);
+        });
+    </script>
+
+    <!-- Include translation script -->
+    <script src="script.js"></script>
+    <script>
+        // Initialize language for Android page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get saved language or default to English
+            const savedLang = localStorage.getItem('preferred_lang') || 'en';
+            currentLang = savedLang;
+
+            // Update flag and code display
+            const langObj = SUPPORTED_LANGUAGES.find(l => l.code === currentLang);
+            if (langObj) {
+                const flagEl = document.getElementById('current-lang-flag');
+                const codeEl = document.getElementById('current-lang-code');
+                if (flagEl) flagEl.textContent = langObj.flag;
+                if (codeEl) codeEl.textContent = langObj.code.toUpperCase();
+            }
+
+            // Apply translations
+            updateAndroidLanguage(currentLang);
+        });
+
+        // Function to set language for Android page
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('preferred_lang', lang);
+
+            // Update flag and code display
+            const langObj = SUPPORTED_LANGUAGES.find(l => l.code === lang);
+            if (langObj) {
+                const flagEl = document.getElementById('current-lang-flag');
+                const codeEl = document.getElementById('current-lang-code');
+                if (flagEl) flagEl.textContent = langObj.flag;
+                if (codeEl) codeEl.textContent = langObj.code.toUpperCase();
+            }
+
+            // Apply translations
+            updateAndroidLanguage(lang);
+        }
+
+        // Function to update Android page translations
+        function updateAndroidLanguage(lang) {
+            const content = getAppContent(lang);
+            if (!content || !content.android) return;
+
+            const androidContent = content.android;
+
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const keys = key.split('.');
+
+                if (keys[0] === 'android') {
+                    const value = androidContent[keys[1]];
+                    if (value) {
+                        el.innerHTML = value;
+                    }
+                }
+            });
+
+            // Reinitialize Lucide icons after content change
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+    </script>
+</body>
+
+</html>
